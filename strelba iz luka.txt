@@ -1,0 +1,55 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	short n, m, f = 0;
+	cin >> n >> m;
+
+	short maxThrow = -1, maxThrowNumber = 0;
+	short maxSumm = -1, msxSummNumber = 0;
+	short minNumber = 10;
+
+	for (short i = 0; i < n; i++)
+	{
+		short aThrow;
+		short sum = 0;
+		short maxLocalThrow = 0;
+
+		for (short j = 0; j < m; j++)
+		{
+			cin >> aThrow;
+			sum += aThrow;
+			if (aThrow > maxLocalThrow)
+				maxLocalThrow = aThrow;
+		}
+
+		if (maxLocalThrow > maxThrow)
+		{
+			maxThrow = maxLocalThrow;
+			maxThrowNumber = i;
+		}
+		else if (maxLocalThrow == maxThrow)
+			f = 1;
+
+		if (sum > maxSumm)
+		{
+			maxSumm = sum;
+			msxSummNumber = i;
+			if (i < minNumber)
+				minNumber = i;
+		}
+		else if ((sum == maxSumm) && (f == 1))
+			f = 2;
+	}
+
+	switch (f) {
+	case 0: cout << maxThrowNumber << endl; break;
+	case 1: cout << msxSummNumber << endl; break;
+	case 2: cout << minNumber << endl; break;
+	default: cout << -1 << endl; break;
+	}
+
+	return 0;
+}

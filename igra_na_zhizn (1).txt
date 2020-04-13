@@ -1,0 +1,105 @@
+#include <iostream>
+
+#include <fstream>
+
+using namespace std;
+
+void output(int** a,int n, int m);
+
+void output1(int** a, int n);
+
+void input(int** a, int n);
+
+void life(int** a, int n, int k);
+
+void menu();
+
+void strelki(int** a, int n, int m);
+
+void minmax(int** a, int n);
+
+void trans(int** a, int** A, int n, int m);
+
+void input1(int** a, int** c, int& n, int& m, int b[], int d[]);
+
+void naChislo(int** A, int n, int m);
+
+void vekotor(int** A, int b[], int New[], int n, int m);
+
+double gaus(double** a, double b[], int n);
+
+int main()
+
+{
+
+setlocale(LC_ALL, "Russian");
+
+int i, j, k, n, namber=1;
+
+while (namber != 0)
+
+{
+
+menu();
+
+cout << "Задание № ";
+
+cin >> namber;
+
+switch (namber) {
+
+case 1: {
+
+cout << "Введите размерность квадратной матрицы: ";
+
+cin >> n;
+
+cout << "Введите количество поколений: ";
+
+cin >> k;
+
+n = n + 2;
+
+int** a;
+
+a = new int* [n];
+
+for (i = 0; i < n; i++)
+
+{
+
+a[i] = new int[n];
+
+}
+
+input(a, n);
+
+/*for (i = 0; i < n; i++)
+
+{
+
+for (j = 0; j < n; j++)
+
+{
+
+printf("%5d ", a[i][j]);
+
+}
+
+cout << endl;
+
+}
+
+cout << endl;*/
+
+cout << "Нулевое поколение: " << endl;
+
+output1(a, n);
+
+life(a, n, k);
+
+delete[] a;
+
+break;
+
+}
