@@ -1,0 +1,130 @@
+#include <iostream>
+#include <vector>
+#include <cassert>
+struct Vector
+{
+    Vector() = default;
+    Vector(size_t n) : m_data(n) {}
+    Vector(std::initializer_list<double> lst) : m_data(std::move(lst)) {}
+ 
+    double& operator[](size_t n) { return m_data[n]; }
+    double operator[](size_t n) const { return m_data[n]; }
+ 
+    size_t size() const { return m_data.size(); }
+ 
+private:
+    std::vector<double> m_data;
+};
+double operator*(const Vector& lh, const Vector& rh)
+{
+    assert(lh.size() == rh.size());
+    double result{};
+    for (size_t i = 0; i < lh.size(); ++i)
+        result += lh[i] * rh[i];
+    return result;
+}
+Vector operator*(double lh, const Vector& rh)
+{
+    Vector result(rh);
+    for (size_t i = 0; i < rh.size(); ++i)
+        result[i] *= lh;
+    return result;
+}
+Vector operator-(const Vector& lh, const Vector& rh)
+{
+    assert(lh.size() == rh.size());
+    Vector result(lh);
+    for (size_t i{}; i < lh.size(); ++i)
+        result[i] -= rh[i];
+    return result;
+}
+struct Matrix
+{
+    Matrix() = default;
+    Matrix(size_t m, size_t n) : m_data(m, Vector(n)) {}
+ 
+    // конструктор для демонстрации, т.к. чтение файла на тебе
+    Matrix(std::initializer_list<Vector> lst) : m_data(std::move(lst)) {}
+ 
+    Vector& operator[](size_t m) { return m_data[m]; }
+    const Vector& operator[](size_t m) const { return m_data[m]; }
+ 
+    size_t rows() const { return m_data.size(); }
+    size_t cols() const { return rows() ? m_data[0].size() : 0; }
+ 
+private:
+    std::vector<Vector> m_data;
+};
+Matrix transpose(const Matrix& mat)
+{
+    Matrix result(mat.cols(), mat.rows());
+    for (size_t i{}; i < mat.rows(); ++i)
+    {
+        for (size_t j{}; j < mat.cols(); ++j)
+        {
+            result[j][i] = mat[i][j];
+        }
+    }
+    return result;
+}
+Vector operator*(const Matrix& lh, const Vector& rh)
+{
+    assert(lh.cols() == rh.size());
+    Vector result(lh.rows());
+    for (size_t i{}; i < lh.rows(); ++i)
+    {
+        result[i] = lh[i] * rh;
+    }
+    return result;
+}
+Matrix operator*(double lh, const Matrix& rh)
+{
+    Matrix result(rh.rows(), rh.cols());
+    for (size_t i = 0; i < rh.rows(); ++i)
+        result[i] = lh * rh[i];
+    return result;
+}
+Vector read_vector(const char* fname)
+{
+    // это на тебе;
+    return {};
+}
+Matrix read_matrix(const char* fname)
+{
+    // и это на тебе;
+    return {};
+}
+#include <iomanip>
+std::ostream& operator<<(std::ostream& os, const Vector& vec)
+{
+    for (size_t i{}; i < vec.size(); ++i)
+        os << std::setw(8) << vec[i];
+    return os;
+}
+std::ostream& operator<<(std::ostream& os, const Matrix& mat)
+{
+    for (size_t i{}; i < mat.rows(); ++i)
+        os << mat[i] << std::endl;
+    return os;
+}
+int main()
+{
+    // m == 4
+    // n == 3
+    Matrix A
+    {
+        {1, 2, 3, 4},
+        {5, 6, 7, 8},
+        {9, 0, 0, 0}
+    };
+    Vector B{ 0, 1, 2, 3 };
+    Matrix C
+    {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9},
+        {0, 0, 0}
+    };
+    Vector D{ 3, 2, 1, 0 };
+    std::cout << A * B - 20 * transpose(C) * D;
+}
